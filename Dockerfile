@@ -19,6 +19,10 @@ RUN curl -sL /tmp/sbt-${SBT_VERSION}.tgz "https://github.com/sbt/sbt/releases/do
        | gunzip \
        | tar -x -C /usr/local
 
+# Here we use a noglobal sbt config, we do no want to use current user local caching
+# as jenkins docker agent override user uid and gid.
+COPY sbtopts /usr/local/sbt/conf/sbtopts
+
 WORKDIR ${TOOL_USER_HOME}
 USER ${TOOL_USER}
 
@@ -26,6 +30,7 @@ RUN git config --global user.email "crosson.david@gmail.com" && \
     git config --global user.name "Jenkins Build Docker Agent"
 
 USER root
+
 RUN chmod a+rwx ${TOOL_USER_HOME} && \
     find ${TOOL_USER_HOME} -type d | xargs chmod a+rwx && \
     find ${TOOL_USER_HOME} -type f | xargs chmod a+rw
