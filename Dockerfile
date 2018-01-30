@@ -2,10 +2,13 @@ FROM openjdk:8-jdk-alpine
 MAINTAINER David Crosson <crosson.david@gmail.com>
 LABEL org.label-schema.vcs-url="https://github.com/dacr/jenkins-docker-agent-sbt"
 
-ENV SBT_VERSION=1.0.3 \
+ENV SBT_VERSION=1.0.4 \
     SBT_HOME=/usr/local/sbt \
     TOOL_USER=sbt \
     TOOL_USER_HOME=/home/sbt
+
+ENV GIT_USER_EMAIL="crosson.david@gmail.com" \
+    GIT_USER_NAME="JenkinsBuildDockerAgent"
 
 ENV PATH=${SBT_HOME}/bin:${PATH}
 
@@ -26,8 +29,8 @@ COPY sbtopts /usr/local/sbt/conf/sbtopts
 WORKDIR ${TOOL_USER_HOME}
 USER ${TOOL_USER}
 
-RUN git config --global user.email "crosson.david@gmail.com" && \
-    git config --global user.name "Jenkins Build Docker Agent"
+RUN git config --global user.email "${GIT_USER_EMAIL}" && \
+    git config --global user.name "${GIT_USER_NAME}"
 
 USER root
 
